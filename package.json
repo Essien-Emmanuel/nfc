@@ -1,14 +1,15 @@
 {
-  "name": "zipper",
+  "name": "file-converter",
   "version": "1.0.0",
-  "description": "compressing and decompressing files",
-  "main": "index.js",
+  "description": "converting files",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Essien-Emmanuel",
   "license": "ISC",
   "bin": {
-    "znode": "index.js"
+    "fcn": "src/index.js"
   }
 }
