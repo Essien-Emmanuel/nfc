@@ -1,23 +1,31 @@
 #!/usr/bin/env node
 
-import { zipDir } from "./tools/zip.js";
+import { zip } from "./tools/zip.js";
 
 if (process.argv.length < 3) {
   console.log("Enter a command >>> 'zip', 'pdf'");
   process.exit(-1);
 }
 
-const args = process.argv.length > 2 ? process.argv.slice(2) : process.cwd();
+const args = process.argv.slice(2);
+const [command, ...items] = args;
 
-const [command, ...files] = args;
+const targetItems = items.length > 0 ? items : Array(process.cwd());
 
 function returnCmdFn(cmd) {
   if (cmd === "zip") {
-    return zipDir;
+    return zip;
+  }
+
+  if (["--help", "-h", "-man", "--manual"].includes(cmd)) {
+    console.log(`
+          commands >>> 'zip', 'pdf'
+          options >>> '-s', '-h or --help'
+      `);
   }
 }
 const cmdFn = returnCmdFn(command);
-cmdFn(files);
+cmdFn(targetItems[0]);
 
 // async function runZip(targetDir) {
 //   try {

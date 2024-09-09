@@ -9,3 +9,12 @@ export const checkIsFile = async (filePath) => {
     console.error("An error occured for lstat: ", error.message);
   }
 };
+
+export const checkData = async (data) => {
+  try {
+    const result = await data;
+    return [result, null];
+  } catch (err) {
+    return [null, err];
+  }
+};
