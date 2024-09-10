@@ -1,5 +1,5 @@
 import fs from "fs";
-const { lstat } = fs.promises;
+const { lstat, readdir } = fs.promises;
 
 export const checkIsFile = async (filePath) => {
   try {
@@ -17,4 +17,15 @@ export const checkData = async (data) => {
   } catch (err) {
     return [null, err];
   }
+};
+
+export const checkDir = async (dir) => {
+  let targetDir = dir;
+
+  if (targetDir !== process.cwd()) {
+    targetDir = path.resolve(dir);
+  }
+
+  const [files, err] = await checkData(readdir(targetDir));
+  return [targetDir, files, err];
 };

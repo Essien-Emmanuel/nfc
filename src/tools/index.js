@@ -1,18 +1,35 @@
 import { ZipTool } from "./zip.js";
+import { helpStr } from "./help.js";
+import { UnzipTool } from "./upzip.js";
 
 export class Tool {
   constructor(cmd, targetItems) {
-    this.validCmds = ["--help", "-h", "--manual", "zip", "pdf"];
+    this.validCmds = [
+      "--help",
+      "-h",
+      "--manual",
+      "zip",
+      "pdf",
+      "--here",
+      "unzip",
+    ];
     this.helpCmds = ["-h", "h", "--help", "--manual"];
 
-    if (!this.validCmds.includes(cmd)) return;
+    if (!this.validCmds.includes(cmd)) {
+      console.error("Invalid command");
+      throw new Error(this.help());
+    }
 
     this.cmd = cmd;
     this.targetItems = targetItems;
   }
 
+  checkArgs(args = []) {
+    if (args.length < 3) {
+    }
+  }
   help() {
-    console.log("sending help");
+    console.log(helpStr);
   }
 
   async zip() {
@@ -22,15 +39,20 @@ export class Tool {
     }
   }
 
+  async unzip() {
+    for (const targetItem of this.targetItems) {
+      const unzipTool = new UnzipTool(targetItem);
+      unzipTool.unzip();
+    }
+  }
+
   pdf() {
     console.log("converting item to pdf");
   }
 
-  call() {
+  use() {
     if (this.validCmds.includes(this.cmd)) {
-      if (this.helpCmds.includes(this.cmd)) return this.help();
-      if (this.cmd === "zip") return this.zip();
-      if (this.cmd === "pdf") return this.pdf();
+      return this[this.cmd]?.();
     }
   }
 }

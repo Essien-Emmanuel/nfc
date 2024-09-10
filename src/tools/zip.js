@@ -4,7 +4,7 @@ import { pipeline } from "stream/promises";
 import path from "path";
 import * as tar from "tar";
 
-import { checkData } from "../utils/index.js";
+import { checkData, checkDir } from "../utils/index.js";
 
 const { readdir, lstat } = fs.promises;
 
@@ -52,12 +52,7 @@ class ZipTool {
   }
 
   async zip() {
-    let targetDir = this.dir;
-
-    if (targetDir !== process.cwd()) {
-      targetDir = path.resolve(this.dir);
-    }
-    const [files, err] = await checkData(readdir(targetDir));
+    const [targetDir, files, err] = await checkDir(this.dir);
 
     if (err) {
       console.log(err.message);
