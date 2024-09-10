@@ -16,28 +16,23 @@ export class UnzipTool {
   }
 
   async unzipFile(zippedFile) {
-    // return;
-    // const unzippedFileFormat = zippedFile.slice(0, zippedFile.length - 3);
+    const unzippedFileFormat = zippedFile.slice(0, zippedFile.length - 3);
 
-    // const src = fs.createReadStream(zippedFile);
-    // const gunzip = createGunzip();
-    // const dest = fs.createWriteStream(unzippedFileFormat);
+    const src = fs.createReadStream(zippedFile);
+    const gunzip = createGunzip();
+    const dest = fs.createWriteStream(unzippedFileFormat);
 
-    // try {
-    //   await pipeline(src, gunzip, dest);
-    // } catch (error) {
-    //   console.log("An error occured while unzipping file");
-    //   console.error(error);
-    // }
-
-    const zippedPath = path.resolve(zippedFile);
-    const stripLen = this.stripLen(zippedFile);
+    try {
+      await pipeline(src, gunzip, dest);
+    } catch (error) {
+      console.log("An error occured while unzipping file");
+      console.error(error);
+    }
   }
 
   async unzipFolder(zippedFolder) {
-    const zippedPath = path.resolve(zippedFolder);
-    const stripLen = this.stripLen(zippedPath);
-    console.log(stripLen);
+    const resolvedPath = path.resolve(zippedFolder);
+    const stripLen = this.stripLen(resolvedPath);
 
     tar.x({
       strip: stripLen,
