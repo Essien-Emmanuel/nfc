@@ -73,6 +73,5 @@ export class UnzipTool {
       if (!this.IsZipped(file)) continue;
       this.unzipCheckedItem(file);
     }
-    console.log("proceeding");
   }
 }

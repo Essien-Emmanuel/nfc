@@ -16,7 +16,6 @@ export class Tool {
     this.helpCmds = ["-h", "h", "--help", "--manual"];
 
     if (!this.validCmds.includes(cmd)) {
-      console.error("Invalid command");
       throw new Error(this.help());
     }
 
