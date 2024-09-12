@@ -2,7 +2,7 @@ import { ZipTool } from "./zip.js";
 import { helpStr } from "./help.js";
 import { UnzipTool } from "./upzip.js";
 
-export class Tool {
+export class Tool2 {
   constructor(cmd, targetItems) {
     this.validCmds = [
       "--help",
@@ -53,5 +53,28 @@ export class Tool {
     if (this.validCmds.includes(this.cmd)) {
       return this[this.cmd]?.();
     }
+  }
+}
+
+export class ToolManager {
+  constructor(args) {
+    this.args = args;
+  }
+
+  zip(args) {
+    console.log("here");
+    const dirs = args.args;
+    const opts = args.opt;
+    const zipTool = new ZipTool(dirs, opts);
+    zipTool.use();
+  }
+
+  register() {
+    const tool = this.args.tools[0];
+    return this[tool]?.(this.args);
+  }
+
+  use() {
+    this.register();
   }
 }
