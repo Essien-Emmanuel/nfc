@@ -1,20 +1,25 @@
 import fs from "fs";
 import { createGzip } from "zlib";
 import { pipeline } from "stream/promises";
-import path from "path";
 import * as tar from "tar";
 
 import { checkData, checkDir } from "../utils/index.js";
 
-const { readdir, lstat } = fs.promises;
+const { lstat } = fs.promises;
 
 class ZipTool {
-  constructor(dir) {
-    this.dir = dir;
+  constructor(dirs, opts) {
+    this.dirs = dirs;
+    this.opts = opts;
   }
 
   async zipCheckedItem(filePath) {
-    const fileStat = await lstat(filePath);
+    const [fileStat, err] = await checkData(lstat(filePath));
+
+    if (err) {
+      console.log(`No such file or directory, ${filePath}`);
+      return;
+    }
 
     if (!fileStat.isFile()) {
       await this.zipFolder(filePath);
@@ -51,22 +56,24 @@ class ZipTool {
     }
   }
 
-  async zip() {
-    const [targetDir, files, err] = await checkDir(this.dir);
+  async zipItem() {
+    const [targetDir, files, err] = await checkDir(this.dirs);
 
     if (err) {
       console.log(err.message);
       return;
     }
+
     if (files.length < 1) return await this.zipCheckedItem(targetDir);
 
-    const filePaths = files.map((file) => path.join(targetDir, file));
-
-    for (const filePath of filePaths) {
+    for (const filePath of files) {
       if (filePath.includes(".gz")) continue;
-
       await this.zipCheckedItem(filePath);
     }
+  }
+
+  async use() {
+    this.zipItem();
   }
 }
 
